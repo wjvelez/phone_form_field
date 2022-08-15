@@ -54,14 +54,14 @@ class PhoneFieldView extends StatelessWidget {
           controller: controller,
           shouldFormat: shouldFormat && !useRtl,
           autofocus: true,
-          autofillHints: const [AutofillHints.telephoneNumber],
+          autofillHints: const [
+            AutofillHints.telephoneNumber
+          ],
           countrySelectorNavigator: selectorNavigator,
           defaultCountry: IsoCode.US,
           decoration: InputDecoration(
             label: withLabel ? const Text('Phone') : null,
-            border: outlineBorder
-                ? const OutlineInputBorder()
-                : const UnderlineInputBorder(),
+            border: outlineBorder ? const OutlineInputBorder() : const UnderlineInputBorder(),
             hintText: withLabel ? '' : 'Phone',
           ),
           enabled: true,
@@ -125,11 +125,10 @@ class PhoneFormFieldScreenState extends State<PhoneFormFieldScreen> {
   bool outlineBorder = true;
   bool mobileOnly = true;
   bool shouldFormat = true;
-  bool isCountryChipPersistent = false;
+  bool isCountryChipPersistent = true;
   bool withLabel = true;
   bool useRtl = false;
-  CountrySelectorNavigator selectorNavigator =
-      const CountrySelectorNavigator.searchDelegate();
+  CountrySelectorNavigator selectorNavigator = const CountrySelectorNavigator.searchDelegate();
   final formKey = GlobalKey<FormState>();
   final phoneKey = GlobalKey<FormFieldState<PhoneNumber>>();
 
@@ -174,8 +173,7 @@ class PhoneFormFieldScreenState extends State<PhoneFormFieldScreen> {
                     ),
                     SwitchListTile(
                       value: isCountryChipPersistent,
-                      onChanged: (v) =>
-                          setState(() => isCountryChipPersistent = v),
+                      onChanged: (v) => setState(() => isCountryChipPersistent = v),
                       title: const Text('Persistent country chip'),
                     ),
                     SwitchListTile(
@@ -195,58 +193,75 @@ class PhoneFormFieldScreenState extends State<PhoneFormFieldScreen> {
                       },
                       title: const Text('RTL'),
                     ),
-                    ListTile(
-                      title: Wrap(
-                        alignment: WrapAlignment.spaceBetween,
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        children: [
-                          const Text('Country selector: '),
-                          DropdownButton<CountrySelectorNavigator>(
-                            value: selectorNavigator,
-                            onChanged: (CountrySelectorNavigator? value) {
-                              if (value != null) {
-                                setState(() => selectorNavigator = value);
-                              }
-                            },
-                            items: const [
-                              DropdownMenuItem(
-                                value: CountrySelectorNavigator.bottomSheet(),
-                                child: Text('Bottom sheet'),
-                              ),
-                              DropdownMenuItem(
-                                value: CountrySelectorNavigator
-                                    .draggableBottomSheet(),
-                                child: Text('Draggable modal sheet'),
-                              ),
-                              DropdownMenuItem(
-                                value:
-                                    CountrySelectorNavigator.modalBottomSheet(
-                                  favorites: [IsoCode.US, IsoCode.BE],
-                                ),
-                                child: Text('Modal sheet'),
-                              ),
-                              DropdownMenuItem(
-                                value:
-                                    CountrySelectorNavigator.dialog(width: 720),
-                                child: Text('Dialog'),
-                              ),
-                              DropdownMenuItem(
-                                value:
-                                    CountrySelectorNavigator.searchDelegate(),
-                                child: Text('Page'),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
+                    // ListTile(
+                    //   title: Wrap(
+                    //     alignment: WrapAlignment.spaceBetween,
+                    //     crossAxisAlignment: WrapCrossAlignment.center,
+                    //     children: [
+                    //       const Text('Country selector: '),
+                    //       DropdownButton<CountrySelectorNavigator>(
+                    //         value: selectorNavigator,
+                    //         onChanged: (CountrySelectorNavigator? value) {
+                    //           if (value != null) {
+                    //             setState(() => selectorNavigator = value);
+                    //           }
+                    //         },
+                    //         items: [
+                    //           const DropdownMenuItem(
+                    //             value: CountrySelectorNavigator.bottomSheet(),
+                    //             child: Text('Bottom sheet'),
+                    //           ),
+                    //           const DropdownMenuItem(
+                    //             value: CountrySelectorNavigator.draggableBottomSheet(),
+                    //             child: Text('Draggable modal sheet'),
+                    //           ),
+                    //           const DropdownMenuItem(
+                    //             value: CountrySelectorNavigator.modalBottomSheet(
+                    //               favorites: [
+                    //                 IsoCode.US,
+                    //                 IsoCode.BE
+                    //               ],
+                    //             ),
+                    //             child: Text('Modal sheet'),
+                    //           ),
+                    //           DropdownMenuItem(
+                    //             value: CountrySelectorNavigator.dialog(
+                    //               width: 720,
+                    //               height: 360,
+                    //               searchBoxDecoration: InputDecoration(
+                    //                   enabledBorder: fieldBorder(),
+                    //                   border: MaterialStateOutlineInputBorder.resolveWith(
+                    //                     (states) => fieldBorder(),
+                    //                   ),
+                    //                   hintText: 'Search'),
+                    //             ),
+                    //             child: Text('Dialog'),
+                    //           ),
+                    //           const DropdownMenuItem(
+                    //             value: CountrySelectorNavigator.searchDelegate(),
+                    //             child: Text('Page'),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
                     const SizedBox(height: 40),
                     Form(
                       key: formKey,
                       child: PhoneFieldView(
                         inputKey: phoneKey,
                         controller: controller,
-                        selectorNavigator: selectorNavigator,
+                        selectorNavigator: CountrySelectorNavigator.dialog(
+                          width: 720,
+                          height: 360,
+                          searchBoxDecoration: InputDecoration(
+                              enabledBorder: fieldBorder(),
+                              border: MaterialStateOutlineInputBorder.resolveWith(
+                                (states) => fieldBorder(),
+                              ),
+                              hintText: 'Search'),
+                        ),
                         withLabel: withLabel,
                         outlineBorder: outlineBorder,
                         isCountryChipPersistent: isCountryChipPersistent,
@@ -259,13 +274,10 @@ class PhoneFormFieldScreenState extends State<PhoneFormFieldScreen> {
                     Text(controller.value.toString()),
                     Text('is valid mobile number '
                         '${controller.value?.isValid(type: PhoneNumberType.mobile) ?? 'false'}'),
-                    Text(
-                        'is valid fixed line number ${controller.value?.isValid(type: PhoneNumberType.fixedLine) ?? 'false'}'),
+                    Text('is valid fixed line number ${controller.value?.isValid(type: PhoneNumberType.fixedLine) ?? 'false'}'),
                     const SizedBox(height: 12),
                     ElevatedButton(
-                      onPressed: controller.value == null
-                          ? null
-                          : () => controller.reset(),
+                      onPressed: controller.value == null ? null : () => controller.reset(),
                       child: const Text('reset'),
                     ),
                     const SizedBox(height: 12),
@@ -287,6 +299,15 @@ class PhoneFormFieldScreenState extends State<PhoneFormFieldScreen> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  InputBorder fieldBorder() {
+    return OutlineInputBorder(
+      borderRadius: BorderRadius.circular(20),
+      borderSide: const BorderSide(
+        color: Color(0xFF626469),
       ),
     );
   }

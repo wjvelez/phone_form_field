@@ -1,4 +1,5 @@
-import 'package:circle_flags/circle_flags.dart';
+import 'package:flag/flag.dart';
+import 'package:flag/flag_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:phone_form_field/l10n/generated/phone_field_localization.dart';
 
@@ -72,9 +73,10 @@ class CountryList extends StatelessWidget {
 
         return ListTile(
           key: ValueKey(country.isoCode.name),
-          leading: CircleFlag(
+          leading: Flag.fromString(
             country.isoCode.name,
-            size: showDialCode ? null : 40,
+            height: 40,
+            width: 40,
           ),
           title: Align(
             alignment: AlignmentDirectional.centerStart,
